@@ -1,51 +1,64 @@
 import * as React from "react";
 import { PropertyControls, ControlType, Stack } from "framer";
-import { HandstandTodayData } from "./HandstandHistoryData";
+import { updateHandstandTodayData } from "./HandstandHistoryData";
 import { List_Item } from "./canvas";
+import { dateWithFullMonthName, convertMsToSecToString } from "./Helpers";
 
 type Props = { text: string };
 
-const monthNames = [
-  "JAN",
-  "FEB",
-  "MAR",
-  "APR",
-  "MAY",
-  "JUN",
-  "JUL",
-  "AUG",
-  "SEP",
-  "OCT",
-  "NOV",
-  "DEC"
-];
-
-function pad(n) {
-  return n < 10 ? "0" + n : n;
-}
-
-function dateWithFullMonthName(month, date, hours, minutes) {
-  return `${monthNames[month]} ${date}, ${hours}:${pad(minutes)}`;
-}
-
-function convertMsToSecToString(ms, delim = " : ") {
-  const seconds = Math.floor((ms / 1000) * 10) / 10;
-
-  return `${seconds} s`;
-}
-
-// Move to separate file ^
-
 export class AppContainer extends React.Component<
-  { width: number; height: number; data },
+  { width: number; height: number },
   Props
 > {
+  constructor(props) {
+    super(props);
+    this.state = {
+      time: 0,
+      timeTotal: 0,
+      isDownHelper: false,
+      dateHelper: 0,
+      attemptsToday: []
+    };
+  }
   static defaultProps = {
     ...Stack.defaultProps,
     data: [{}]
   };
   static propertyControls: PropertyControls = {
     ...Stack.propertyControls
+  };
+
+  componentDidMount() {
+    console.log("Added Listener");
+    window.addEventListener("deviceorientation", this.handleOrientation, true);
+  }
+
+  componentWillUnmount() {
+    console.log("Removed Listener");
+    window.removeEventListener(
+      "deviceorientation",
+      this.handleOrientation,
+      true
+    );
+  }
+
+  handleOrientation = event => {
+    const { beta } = event;
+    console.log("Beta, ", beta);
+    if (beta < -55 && beta > -125 && !this.state.isDownHelper) {
+      this.setState({
+        isDownHelper: true,
+        dateHelper: Date.now()
+      });
+    } else if ((beta < -125 || beta > -55) && this.state.isDownHelper) {
+      let attemptTime = Math.abs(this.state.dateHelper - Date.now());
+      this.setState(prevState => ({
+        isDownHelper: false,
+        time: attemptTime
+      }));
+      console.log("Ready to push ", attemptTime);
+      updateHandstandTodayData(attemptTime);
+    }
   };
 
   render() {

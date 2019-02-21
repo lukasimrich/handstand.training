@@ -2,6 +2,11 @@
 # yarn lockfile v1
 
 
+"@framer/benjamin.arc@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.framer.com/@framer/benjamin.arc/-/@framer/benjamin.arc-1.1.0.tgz#c5d2b473cd9217a443065292a5d69841aa51b622"
+  integrity sha1-xdK0c82SF6RDBlKSpdaYQapRtiI=
+
 "@types/prop-types@*":
   version "15.5.6"
   resolved "https://registry.yarnpkg.com/@types/prop-types/-/prop-types-15.5.6.tgz#9c03d3fed70a8d517c191b7734da2879b50ca26c"

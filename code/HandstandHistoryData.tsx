@@ -1,6 +1,9 @@
 import * as React from "react";
 import "whatwg-fetch";
 import { Data } from "framer";
+import * as Airtable from "airtable";
+
+// const Airtable = require("airtable");
 
 let HandstandData = Data({
   attemptsToday: [],
@@ -9,27 +12,31 @@ let HandstandData = Data({
   dailySum: 0
 });
 
+// console.log(
+//   "Handstands History ",
+//   HandstandTodayData,
+//   HandstandTodayData.attemptsToday.length
+// );
+
+const base = new Airtable({ apiKey: "keycKv16qQ85dB1SD" }).base(
+  "appyL0FkVEkJ0rSS3"
+);
+
 const sum = attemptsToday =>
   attemptsToday.reduce((sum, attempt) => sum + attempt.duration, 0);
 
-export const fetchHandstandTodayData = () => {
-  console.log("Getting Airtable Data");
+if (HandstandData.attemptsToday.length < 1) {
+  base("Statistics")
+    .select({
+      fields: ["id", "duration", "goal", "date"],
+      view: "Grid view",
+      filterByFormula: "IS_AFTER({date},TODAY())"
+    })
+    .eachPage(
+      function page(records, fetchNextPage) {
+        // This function (`page`) will get called for each page of records.
 
-  const key = "keycKv16qQ85dB1SD";
-  const url =
-    "https://api.airtable.com/v0/appyL0FkVEkJ0rSS3/Statistics?filterByFormula=IS_AFTER(%7Bdate%7D%2C+TODAY())";
-
-  fetch(url, {
-    headers: {
-      Authorization: `Bearer ${key}`
-    }
-  })
-    .then(response => response.json())
-    .then(response => {
-      console.log("Response ", response);
-      if (response.records) {
-        response.records.map(record => {
-          console.log("Record from airtable ", record);
+        records.map(record => {
           let attempt = {};
           attempt.duration = record.fields.duration;
           attempt.date = record.fields.date;
@@ -39,40 +46,43 @@ export const fetchHandstandTodayData = () => {
         });
         HandstandData.dailySum = sum(HandstandData.attemptsToday);
         console.log("Fetched data ", HandstandData);
+        fetchNextPage();
+      },
+      function done(err) {
+        if (err) {
+          console.error(err);
+          return;
+        }
       }
-    })
-    .catch(error => {
-      console.log(error);
-    });
+    );
+}
+
+export const updateHandstandTodayData = record => {
+  base("Statistics").create(
+    {
+      duration: record,
+      goal: "600000",
+      SummaryLink: ["recWn5G5DYEQqAYRi"]
+    },
+    function(err, record) {
+      if (err) {
+        console.error(err);
+        return;
+      }
+
+      let attempt = {};
+      attempt.duration = record.fields.duration;
+      attempt.date = record.fields.date;
+      attempt.time = record.fields.duration;
+      attempt.time = record.fields.goals;
+      attempt.key = record.id;
+
+      HandstandData.dailySum = sum(HandstandData.attemptsToday);
+      HandstandData.attemptsToday.push(attempt);
+
+      console.log("New Record");
+    }
+  );
 };
-
-// export const fetchBestAttempt = () => {
-//   console.log("Getting Airtable Data");
-
-//   const key = "keycKv16qQ85dB1SD";
-//   const url =
-//     "https://api.airtable.com/v0/appyL0FkVEkJ0rSS3/Statistics?filterByFormula=IS_AFTER(%7Bdate%7D%2C+TODAY())";
-
-//   fetch(url, {
-//     headers: {
-//       Authorization: `Bearer ${key}`
-//     }
-//   })
-//     .then(response => response.json())
-//     .then(response => {
-//       if (response.records) {
-//         HandstandData.bestAttempt = response.records;
-
-//         console.log(
-//           "Airtable best attempt fetched successfully",
-
-//           HandstandData.bestAttempt
-//         );
-//       }
-//     })
-//     .catch(error => {
-//       console.log(error);
-//     });
-// };
 
 export const HandstandTodayData = HandstandData;
