@@ -1,0 +1,20 @@
+{
+	"main": "dist/index.js",
+	"license": "MIT",
+	"devDependencies": {
+		"@types/react": "^16.4.16"
+	},
+	"peerDependencies": {
+		"framer": "^0.10",
+		"react": "^16.3.0",
+		"react-dom": "^16.3.0"
+	},
+	"framer": {
+		"id": "507a76e0-0484-4299-a173-b108cf3d7770"
+	},
+	"author": "Lukas Imrich",
+	"dependencies": {
+		"airtable": "^0.5.9",
+		"whatwg-fetch": "^3.0.0"
+	}
+}
