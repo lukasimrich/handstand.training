@@ -1,14 +1,13 @@
 import * as React from "react";
-import { PropertyControls, ControlType, Stack, Override } from "framer";
+import { PropertyControls, ControlType, Stack, Override, Data } from "framer";
 import {
   updateHandstandTodayData,
   HandstandTodayData,
-  loadHandstandData
+  loadHandstandData,
+  loadBestAttemptEver
 } from "./HandstandHistoryData";
 import { List_Item } from "./canvas";
-import { dateWithFullMonthName, convertMsToSecToString } from "./Helpers";
-
-type Props = { text: string };
+import { dateWithFullMonthName, convertMsToSecToString, sum } from "./Helpers";
 
 export class AppContainer extends React.Component<
   { width: number; height: number },
@@ -17,8 +16,9 @@ export class AppContainer extends React.Component<
   constructor(props) {
     super(props);
     this.state = {
-      time: 0,
       timeTotal: 0,
+      dailyGoal: 0,
+      bestAttempt: 0,
       isDownHelper: false,
       dateHelper: 0,
       attemptsToday: []
@@ -33,14 +33,19 @@ export class AppContainer extends React.Component<
   };
 
   componentDidMount() {
-    console.log("Added Listener");
     window.addEventListener("deviceorientation", this.handleOrientation, true);
-    console.log("Loading Data");
     this.loadData();
   }
 
+  componentDidUpdate() {
+    if (this.state.attemptsToday !== HandstandTodayData.attemptsToday) {
+      HandstandTodayData.attemptsToday = this.state.attemptsToday;
+      HandstandTodayData.dailySum = this.state.timeTotal;
+      HandstandTodayData.bestAttempt = this.state.bestAttempt;
+    }
+  }
+
   componentWillUnmount() {
-    console.log("Removed Listener");
     window.removeEventListener(
       "deviceorientation",
       this.handleOrientation,
@@ -50,14 +55,22 @@ export class AppContainer extends React.Component<
 
   loadData = async () => {
     const HandstandsToday = await loadHandstandData();
-    console.log("Handstand Loading Data in Async ", HandstandsToday);
-    this.setState({ attemptsToday: HandstandsToday });
-    HandstandTodayData.attemptsToday = HandstandsToday;
+    const bestAttempt = await loadBestAttemptEver();
+    this.setState({
+      attemptsToday: HandstandsToday,
+      timeTotal: sum(HandstandsToday),
+      dailyGoal: HandstandsToday[HandstandsToday.length - 1].goal,
+      bestAttempt: bestAttempt
+    });
+    HandstandTodayData.attemptsToday = this.state.attemptsToday;
+    HandstandTodayData.dailySum = this.state.timeTotal;
+    HandstandTodayData.dailyGoal = this.state.dailyGoal;
+    HandstandTodayData.bestAttempt = this.state.bestAttempt;
+    console.log("state", this.state);
   };
 
   handleOrientation = event => {
     const { beta } = event;
-    console.log("Beta, ", beta);
     if (beta < -55 && beta > -125 && !this.state.isDownHelper) {
       this.setState({
         isDownHelper: true,
@@ -68,19 +81,26 @@ export class AppContainer extends React.Component<
       const newAttempt = {
         duration: attemptTime,
         goal: "600000",
-        date: Date.now()
+        date: Date.now(),
+        key: Date.now()
       };
-      this.setState({
-        isDownHelper: false,
-        attemptsToday: [...this.state.attemptsToday, newAttempt]
+      this.setState(prevState => {
+        return {
+          isDownHelper: false,
+          timeTotal: sum([...this.state.attemptsToday, newAttempt]),
+          dailyGoal: newAttempt.goal,
+          attemptsToday: [...this.state.attemptsToday, newAttempt],
+          bestAttempt:
+            prevState.bestAttempt < newAttempt.duration
+              ? newAttempt.duration
+              : prevState.bestAttempt
+        };
       });
-      updateHandstandTodayData(attemptTime);
-      HandstandTodayData.attemptsToday.push(newAttempt);
+      updateHandstandTodayData(newAttempt);
     }
   };
   render() {
-    console.log("Rendering Stack ", this.props.data);
-    console.log("State ", this.state);
+    const orderedAttempts = [...this.state.attemptsToday].reverse();
     return (
       <Stack
         {...this.props}
@@ -91,7 +111,7 @@ export class AppContainer extends React.Component<
         height={(this.state.attemptsToday.length + 1) * 48 - 48}
         data={[{}]}
       >
-        {this.state.attemptsToday.map(attempt => {
+        {orderedAttempts.map((attempt, index) => {
           let date = new Date(attempt.date);
           return (
             <List_Item
@@ -110,13 +130,3 @@ export class AppContainer extends React.Component<
     );
   }
 }
-
-export const Test: Override = () => {
-  console.log(
-    "From Data Object to Test ",
-    HandstandTodayData.attemptsToday.length
-  );
-  return {
-    test: HandstandTodayData.attemptsToday.length
-  };
-};

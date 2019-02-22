@@ -16,9 +16,6 @@ const base = new Airtable({ apiKey: "keycKv16qQ85dB1SD" }).base(
   "appyL0FkVEkJ0rSS3"
 );
 
-const sum = attemptsToday =>
-  attemptsToday.reduce((sum, attempt) => sum + attempt.duration, 0);
-
 export const loadHandstandData = () =>
   base("Statistics")
     .select({
@@ -32,7 +29,8 @@ export const loadHandstandData = () =>
       const results = records.map(record => ({
         duration: record.fields.duration,
         date: record.fields.date,
-        key: record.id
+        key: record.id,
+        goal: record.fields.goal
       }));
 
       return results;
@@ -41,11 +39,26 @@ export const loadHandstandData = () =>
       console.error(err);
     });
 
+export const loadBestAttemptEver = () =>
+  base("Summary")
+    .select({
+      fields: ["BestAttempt"],
+      view: "Grid view"
+    })
+    .all()
+    .then(records => {
+      console.log("Records processing, # of records: ", records);
+      return records[0].fields.BestAttempt;
+    })
+    .catch(err => {
+      console.error(err);
+    });
+
 export const updateHandstandTodayData = record => {
   base("Statistics").create(
     {
-      duration: record,
-      goal: "600000",
+      duration: record.duration,
+      goal: record.goal,
       SummaryLink: ["recWn5G5DYEQqAYRi"]
     },
     function(err, record) {
@@ -53,7 +66,6 @@ export const updateHandstandTodayData = record => {
         console.error(err);
         return;
       }
-      console.log("New Record Added ", record);
     }
   );
 };
