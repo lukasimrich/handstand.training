@@ -12,12 +12,6 @@ let HandstandData = Data({
   dailySum: 0
 });
 
-// console.log(
-//   "Handstands History ",
-//   HandstandTodayData,
-//   HandstandTodayData.attemptsToday.length
-// );
-
 const base = new Airtable({ apiKey: "keycKv16qQ85dB1SD" }).base(
   "appyL0FkVEkJ0rSS3"
 );
@@ -25,37 +19,27 @@ const base = new Airtable({ apiKey: "keycKv16qQ85dB1SD" }).base(
 const sum = attemptsToday =>
   attemptsToday.reduce((sum, attempt) => sum + attempt.duration, 0);
 
-if (HandstandData.attemptsToday.length < 1) {
+export const loadHandstandData = () =>
   base("Statistics")
     .select({
       fields: ["id", "duration", "goal", "date"],
       view: "Grid view",
       filterByFormula: "IS_AFTER({date},TODAY())"
     })
-    .eachPage(
-      function page(records, fetchNextPage) {
-        // This function (`page`) will get called for each page of records.
+    .all()
+    .then(records => {
+      console.log("Records processing, # of records: ", records.length);
+      const results = records.map(record => ({
+        duration: record.fields.duration,
+        date: record.fields.date,
+        key: record.id
+      }));
 
-        records.map(record => {
-          let attempt = {};
-          attempt.duration = record.fields.duration;
-          attempt.date = record.fields.date;
-          attempt.time = record.fields.duration;
-          attempt.key = record.id;
-          return HandstandData.attemptsToday.push(attempt);
-        });
-        HandstandData.dailySum = sum(HandstandData.attemptsToday);
-        console.log("Fetched data ", HandstandData);
-        fetchNextPage();
-      },
-      function done(err) {
-        if (err) {
-          console.error(err);
-          return;
-        }
-      }
-    );
-}
+      return results;
+    })
+    .catch(err => {
+      console.error(err);
+    });
 
 export const updateHandstandTodayData = record => {
   base("Statistics").create(
@@ -69,18 +53,7 @@ export const updateHandstandTodayData = record => {
         console.error(err);
         return;
       }
-
-      let attempt = {};
-      attempt.duration = record.fields.duration;
-      attempt.date = record.fields.date;
-      attempt.time = record.fields.duration;
-      attempt.time = record.fields.goals;
-      attempt.key = record.id;
-
-      HandstandData.dailySum = sum(HandstandData.attemptsToday);
-      HandstandData.attemptsToday.push(attempt);
-
-      console.log("New Record");
+      console.log("New Record Added ", record);
     }
   );
 };

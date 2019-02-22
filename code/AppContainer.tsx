@@ -1,6 +1,10 @@
 import * as React from "react";
-import { PropertyControls, ControlType, Stack } from "framer";
-import { updateHandstandTodayData } from "./HandstandHistoryData";
+import { PropertyControls, ControlType, Stack, Override } from "framer";
+import {
+  updateHandstandTodayData,
+  HandstandTodayData,
+  loadHandstandData
+} from "./HandstandHistoryData";
 import { List_Item } from "./canvas";
 import { dateWithFullMonthName, convertMsToSecToString } from "./Helpers";
 
@@ -31,6 +35,8 @@ export class AppContainer extends React.Component<
   componentDidMount() {
     console.log("Added Listener");
     window.addEventListener("deviceorientation", this.handleOrientation, true);
+    console.log("Loading Data");
+    this.loadData();
   }
 
   componentWillUnmount() {
@@ -42,6 +48,13 @@ export class AppContainer extends React.Component<
     );
   }
 
+  loadData = async () => {
+    const HandstandsToday = await loadHandstandData();
+    console.log("Handstand Loading Data in Async ", HandstandsToday);
+    this.setState({ attemptsToday: HandstandsToday });
+    HandstandTodayData.attemptsToday = HandstandsToday;
+  };
+
   handleOrientation = event => {
     const { beta } = event;
     console.log("Beta, ", beta);
@@ -52,16 +65,22 @@ export class AppContainer extends React.Component<
       });
     } else if ((beta < -125 || beta > -55) && this.state.isDownHelper) {
       let attemptTime = Math.abs(this.state.dateHelper - Date.now());
-      this.setState(prevState => ({
+      const newAttempt = {
+        duration: attemptTime,
+        goal: "600000",
+        date: Date.now()
+      };
+      this.setState({
         isDownHelper: false,
-        time: attemptTime
-      }));
-      console.log("Ready to push ", attemptTime);
+        attemptsToday: [...this.state.attemptsToday, newAttempt]
+      });
       updateHandstandTodayData(attemptTime);
+      HandstandTodayData.attemptsToday.push(newAttempt);
     }
   };
-
   render() {
+    console.log("Rendering Stack ", this.props.data);
+    console.log("State ", this.state);
     return (
       <Stack
         {...this.props}
@@ -69,9 +88,10 @@ export class AppContainer extends React.Component<
         borderColor="rgba(33, 33, 33, 0.1)"
         radius="0 0 4px 4px"
         borderWidth={{ top: 0, bottom: 1, left: 1, right: 1 }}
-        height={(this.props.data.length + 1) * 48 - 48}
+        height={(this.state.attemptsToday.length + 1) * 48 - 48}
+        data={[{}]}
       >
-        {this.props.data.map(attempt => {
+        {this.state.attemptsToday.map(attempt => {
           let date = new Date(attempt.date);
           return (
             <List_Item
@@ -90,3 +110,13 @@ export class AppContainer extends React.Component<
     );
   }
 }
+
+export const Test: Override = () => {
+  console.log(
+    "From Data Object to Test ",
+    HandstandTodayData.attemptsToday.length
+  );
+  return {
+    test: HandstandTodayData.attemptsToday.length
+  };
+};

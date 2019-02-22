@@ -3,3 +3,4 @@ import { createDesignComponent, CanvasStore } from "framer"
 const canvas = CanvasStore.shared(); // CANVAS_DATA;
 export const DailySum = createDesignComponent<{parentSize?:{width:number|string,height:number|string},width?:number|string,height?:number|string,dailySum?:string}>(canvas, "id_J5xBlcN6M", {dailySum:"string"}, 360,30);
 export const List_Item = createDesignComponent<{parentSize?:{width:number|string,height:number|string},width?:number|string,height?:number|string,date?:string,duration?:string}>(canvas, "id_efjj2Hk37", {date:"string",duration:"string"}, 264,24);
+export const Test = createDesignComponent<{parentSize?:{width:number|string,height:number|string},width?:number|string,height?:number|string,test?:string}>(canvas, "id_wZVa0XTZS", {test:"string"}, 36,19);
