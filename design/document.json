@@ -360,7 +360,7 @@
             "intrinsicWidth" : null,
             "left" : 23,
             "locked" : false,
-            "name" : null,
+            "name" : "AppContainer",
             "opacity" : 1,
             "originalid" : null,
             "parentid" : "A0F5or_gp",

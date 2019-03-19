@@ -55,18 +55,19 @@ export class AppContainer extends React.Component<
 
   loadData = async () => {
     const HandstandsToday = await loadHandstandData();
-    const bestAttempt = await loadBestAttemptEver();
+    const bestAttemptEver = await loadBestAttemptEver();
     this.setState({
       attemptsToday: HandstandsToday,
       timeTotal: sum(HandstandsToday),
       dailyGoal: HandstandsToday[HandstandsToday.length - 1].goal,
-      bestAttempt: bestAttempt
+      bestAttempt: bestAttemptEver
     });
-    HandstandTodayData.attemptsToday = this.state.attemptsToday;
-    HandstandTodayData.dailySum = this.state.timeTotal;
-    HandstandTodayData.dailyGoal = this.state.dailyGoal;
-    HandstandTodayData.bestAttempt = this.state.bestAttempt;
-    console.log("state", this.state);
+
+    const { attemptsToday, timeTotal, dailyGoal, bestAttempt } = this.state;
+    HandstandTodayData.attemptsToday = attemptsToday;
+    HandstandTodayData.dailySum = timeTotal;
+    HandstandTodayData.dailyGoal = dailyGoal;
+    HandstandTodayData.bestAttempt = bestAttempt;
   };
 
   handleOrientation = event => {
@@ -100,7 +101,7 @@ export class AppContainer extends React.Component<
     }
   };
   render() {
-    const orderedAttempts = [...this.state.attemptsToday].reverse();
+    const orderedAttemptsReverse = [...this.state.attemptsToday].reverse();
     return (
       <Stack
         {...this.props}
@@ -109,9 +110,8 @@ export class AppContainer extends React.Component<
         radius="0 0 4px 4px"
         borderWidth={{ top: 0, bottom: 1, left: 1, right: 1 }}
         height={(this.state.attemptsToday.length + 1) * 48 - 48}
-        data={[{}]}
       >
-        {orderedAttempts.map((attempt, index) => {
+        {orderedAttemptsReverse.map((attempt, index) => {
           let date = new Date(attempt.date);
           return (
             <List_Item
