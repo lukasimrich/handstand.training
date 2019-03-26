@@ -16,6 +16,8 @@ const base = new Airtable({ apiKey: "keycKv16qQ85dB1SD" }).base(
   "appyL0FkVEkJ0rSS3"
 );
 
+// Async await, when and why?
+
 export const loadHandstandData = () =>
   base("Statistics")
     .select({

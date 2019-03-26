@@ -1,60 +1,48 @@
 import { Override } from "framer";
-import { HandstandTodayData } from "./HandstandHistoryData";
 import {
   convertToString,
   convertToMinSecToString,
   convertMsToSecToString
 } from "./Helpers";
 
+import { DataController } from "./DataController";
+
+const dataController = new DataController();
+
 export const DailySum: Override = () => {
-  console.log(HandstandTodayData.dailySum);
   return {
-    dailySum: HandstandTodayData.dailySum
+    dailySum: convertToMinSecToString(dataController.timeTotal)
   };
 };
 
 export const Arc: Override = () => {
-  console.log("Arc ", HandstandTodayData);
-
-  if (HandstandTodayData.dailyGoal != 0) {
-    const progress =
-      (HandstandTodayData.dailySum * 360) / HandstandTodayData.dailyGoal;
-    console.log("Arc ", progress);
-
-    return {
-      length: progress
-    };
-  }
+  const progress = (dataController.timeTotal * 360) / dataController.dailyGoal;
+  console.log("Best Attempt ", dataController.bestAttempt);
+  return {
+    length: progress
+  };
 };
 
 export const ProgressStats: Override = () => {
-  if (HandstandTodayData.dailyGoal != 0) {
-    const progressStats =
-      Math.floor(
-        (HandstandTodayData.dailySum / HandstandTodayData.dailyGoal) * 100 * 10
-      ) / 10;
-    console.log("Progress % ", progressStats);
-    return {
-      progress: `${progressStats}%`,
-      dailyGoal: `of ${convertToString(HandstandTodayData.dailyGoal)}`
-    };
-  }
+  const progressStats =
+    Math.floor(
+      (dataController.timeTotal / dataController.dailyGoal) * 100 * 10
+    ) / 10;
+  return {
+    progress: `${progressStats}%`,
+    dailyGoal: `of ${convertToString(dataController.dailyGoal)}`
+  };
 };
 
-export const DailySumStats: Override = () => {
-  if (HandstandTodayData.dailySum != 0) {
-    return {
-      dailySum: convertToMinSecToString(HandstandTodayData.dailySum)
-    };
-  }
-};
+export const AllTimeBest: Override = () => ({
+  bestTime: `${convertMsToSecToString(
+    dataController.bestAttempt
+  )} all time best`
+});
 
-export const AllTimeBest: Override = () => {
-  if (HandstandTodayData.bestAttempt != 0) {
-    return {
-      bestTime: `${convertMsToSecToString(
-        HandstandTodayData.bestAttempt
-      )} all time best`
-    };
-  }
+export const StackData: Override = () => {
+  console.log("Stack data ", dataController.handstandsToday);
+  return {
+    data: dataController.handstandsToday
+  };
 };

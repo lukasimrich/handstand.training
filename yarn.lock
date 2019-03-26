@@ -7,10 +7,30 @@
   resolved "https://registry.framer.com/@framer/benjamin.arc/-/@framer/benjamin.arc-1.1.0.tgz#c5d2b473cd9217a443065292a5d69841aa51b622"
   integrity sha1-xdK0c82SF6RDBlKSpdaYQapRtiI=
 
+"@types/animejs@^2.0.2":
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/@types/animejs/-/animejs-2.0.2.tgz#80ec902fb0dc90778fbcdaf080c03c44ddda979f"
+  integrity sha512-ACymFQ5qgSrZNR1Fqjk7Wv9gH6dFgejn2gpLkkceWxTKzivRJsshX4xhBVALgvF79gUdXiMCRIdusN728XpeGA==
+
 "@types/prop-types@*":
   version "15.5.6"
   resolved "https://registry.yarnpkg.com/@types/prop-types/-/prop-types-15.5.6.tgz#9c03d3fed70a8d517c191b7734da2879b50ca26c"
   integrity sha512-ZBFR7TROLVzCkswA3Fmqq+IIJt62/T7aY/Dmz+QkU7CaW2QFqAitCE8Ups7IzmGhcN1YWMBT4Qcoc07jU9hOJQ==
+
+"@types/react-dom@^16.8.2":
+  version "16.8.2"
+  resolved "https://registry.yarnpkg.com/@types/react-dom/-/react-dom-16.8.2.tgz#9bd7d33f908b243ff0692846ef36c81d4941ad12"
+  integrity sha512-MX7n1wq3G/De15RGAAqnmidzhr2Y9O/ClxPxyqaNg96pGyeXUYPSvujgzEVpLo9oIP4Wn1UETl+rxTN02KEpBw==
+  dependencies:
+    "@types/react" "*"
+
+"@types/react@*", "@types/react@^16.8.5":
+  version "16.8.8"
+  resolved "https://registry.yarnpkg.com/@types/react/-/react-16.8.8.tgz#4b60a469fd2469f7aa6eaa0f8cfbc51f6d76e662"
+  integrity sha512-xwEvyet96u7WnB96kqY0yY7qxx/pEpU51QeACkKFtrgjjXITQn0oO1iwPEraXVgh10ZFPix7gs1R4OJXF7P5sg==
+  dependencies:
+    "@types/prop-types" "*"
+    csstype "^2.2.0"
 
 "@types/react@^16.4.16":
   version "16.4.16"
@@ -38,6 +58,11 @@ ajv@^6.5.5:
     fast-json-stable-stringify "^2.0.0"
     json-schema-traverse "^0.4.1"
     uri-js "^4.2.2"
+
+animejs@^3.0.1:
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/animejs/-/animejs-3.0.1.tgz#8b808bad575e3b6106489d8b04b92bc4062166fe"
+  integrity sha512-7mMoBQScvA7s4zm3EVgnuXXrtOu6TJNAhU+Ajo7HsXYH0NwbuZIcRHMO65a9NyUlmAXz4VPxlK5cENNOQbCi8g==
 
 asn1@~0.2.3:
   version "0.2.4"
@@ -165,6 +190,22 @@ form-data@~2.3.2:
     asynckit "^0.4.0"
     combined-stream "^1.0.6"
     mime-types "^2.1.12"
+
+framer-controller@^1.6.31:
+  version "1.6.31"
+  resolved "https://registry.yarnpkg.com/framer-controller/-/framer-controller-1.6.31.tgz#e5859eaab4403af3bc439bce349f4ad7a0c92044"
+  integrity sha512-JzRvgH+FELyyazErO0dBqL+X6WZ58YbaZ4Z2GESqh1R1ekEFXGnVD14FCE+0uNlQR45bPxianJ1NeORmAUi3RQ==
+  dependencies:
+    "@types/animejs" "^2.0.2"
+    "@types/react" "^16.8.5"
+    "@types/react-dom" "^16.8.2"
+    animejs "^3.0.1"
+    framer "^0.10.9"
+
+framer@^0.10.9:
+  version "0.10.9"
+  resolved "https://registry.yarnpkg.com/framer/-/framer-0.10.9.tgz#6bdf801303ef801a4345d701a3f6098d59231a2c"
+  integrity sha512-pfis3ukgh4btEXtiBlJN4qWvw0ylauouYOrn2SGlVepDjXlQJl9Zut1W9BlhHWFpS6dS6xVjQ6jS8dSoj+pjng==
 
 getpass@^0.1.1:
   version "0.1.7"
