@@ -2,19 +2,24 @@ import * as React from "react";
 import { PropertyControls, ControlType, Stack, Override, Data } from "framer";
 import {
   updateHandstandTodayData,
-  HandstandTodayData,
   loadHandstandData,
   loadBestAttemptEver
 } from "./HandstandHistoryData";
 import { dateWithFullMonthName, convertMsToSecToString, sum } from "./Helpers";
 import Controller from "framer-controller";
 
+/* 
+interface Attempt {
+  props
+}
+ */
+
 interface Options {
   loading: boolean;
   timeTotal: number;
   dailyGoal: number;
   bestAttempt: number;
-  attemptsToday: any;
+  attemptsToday: [];
   isDown: boolean;
   durationStart: number;
 }
@@ -25,7 +30,7 @@ interface State extends Options {}
 Default value do we need them, duration start
  */
 export class DataController extends Controller<State> {
-  constructor(options: Options = {} as Options) {
+  constructor(options = {} as Options) {
     super({
       isDown: false,
       durationStart: 0,
@@ -66,6 +71,7 @@ export class DataController extends Controller<State> {
       this.state.isDown = false;
       console.log("Value of duration", this.state.durationStart);
 
+      // date now asssign (cache) to a variable and then
       let attemptTime = Math.abs(this.state.durationStart - Date.now());
       const newAttempt = {
         duration: attemptTime,
@@ -90,7 +96,7 @@ export class DataController extends Controller<State> {
     }
   };
 
-  get timeTotal() {
+  timeTotal() {
     return this.state.timeTotal;
   }
 
