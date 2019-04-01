@@ -1,3 +1,5 @@
+import * as Canvas from "./canvas";
+
 const monthNames = [
   "JAN",
   "FEB",
@@ -46,3 +48,13 @@ export function convertToMinSecToString(ms, delim = " : ") {
 
 export const sum = handstandsToday =>
   handstandsToday.reduce((sum, handstand) => sum + handstand.duration, 0);
+
+export const getComponents = componentType => {
+  let componentList = [];
+  for (var key in Canvas) {
+    if (!key.endsWith("__") && key.includes(componentType)) {
+      componentList.push(key);
+    }
+  }
+  return componentList;
+};

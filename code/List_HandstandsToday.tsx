@@ -1,16 +1,14 @@
 import * as React from "react";
 import { PropertyControls, ControlType, Stack } from "framer";
 import * as Canvas from "./canvas";
-import { List_Item } from "./canvas";
 
-import { dateWithFullMonthName, convertMsToSecToString } from "./Helpers";
+import {
+  dateWithFullMonthName,
+  convertMsToSecToString,
+  getComponents
+} from "./Helpers";
 
-let componentList = [];
-for (var key in Canvas) {
-  if (!key.endsWith("__") && key.includes("List")) {
-    componentList.push(key);
-  }
-}
+let componentList = getComponents("List");
 
 type Props = { data: any; component: any };
 

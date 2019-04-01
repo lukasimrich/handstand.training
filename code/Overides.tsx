@@ -10,39 +10,54 @@ import { DataController } from "./DataController";
 const dataController = new DataController();
 
 export const DailySum: Override = () => {
-  return {
-    dailySum: convertToMinSecToString(dataController.timeTotal)
-  };
+  if (!dataController.isLoading) {
+    return {
+      dailySum: convertToMinSecToString(dataController.timeTotal)
+    };
+  }
 };
 
 export const Arc: Override = () => {
-  const progress = (dataController.timeTotal * 360) / dataController.dailyGoal;
-  console.log("Best Attempt ", dataController.bestAttempt);
-  return {
-    length: progress
-  };
+  if (!dataController.isLoading) {
+    const progress =
+      (dataController.timeTotal * 360) / dataController.dailyGoal;
+    return {
+      length: progress
+    };
+  }
 };
 
 export const ProgressStats: Override = () => {
-  const progressStats =
-    Math.floor(
-      (dataController.timeTotal / dataController.dailyGoal) * 100 * 10
-    ) / 10;
-  return {
-    progress: `${progressStats}%`,
-    dailyGoal: `of ${convertToString(dataController.dailyGoal)}`
-  };
+  if (!dataController.isLoading) {
+    const progressStats =
+      Math.floor(
+        (dataController.timeTotal / dataController.dailyGoal) * 100 * 10
+      ) / 10;
+    return {
+      progress: `${progressStats}%`,
+      dailyGoal: `of ${convertToString(dataController.dailyGoal)}`
+    };
+  }
 };
 
-export const AllTimeBest: Override = () => ({
-  bestTime: `${convertMsToSecToString(
-    dataController.bestAttempt
-  )} all time best`
-});
+export const AllTimeBest: Override = () => {
+  if (!dataController.isLoading) {
+    bestTime: `${convertMsToSecToString(
+      dataController.bestAttempt
+    )} all time best`;
+  }
+};
 
 export const StackData: Override = () => {
-  console.log("Stack data ", dataController.handstandsToday);
+  if (!dataController.isLoading) {
+    return {
+      data: dataController.handstandsToday
+    };
+  }
+};
+
+export const InitialState: Override = () => {
   return {
-    data: dataController.handstandsToday
+    isLoading: dataController.isLoading
   };
 };

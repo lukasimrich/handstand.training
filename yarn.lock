@@ -202,11 +202,6 @@ framer-controller@^1.6.31:
     animejs "^3.0.1"
     framer "^0.10.9"
 
-framer@^0.10:
-  version "0.10.10"
-  resolved "https://registry.yarnpkg.com/framer/-/framer-0.10.10.tgz#36bb2ae82d620944cf43adea295d6ec7000f7942"
-  integrity sha512-9w0Y7p/2HsYQqtiaPgLqwiEFDBTwGwPbufJP8XRek5j/nojcFdm6995l/uBzbpddSgR3oFB1SKcGO2W64KHlzQ==
-
 framer@^0.10.9:
   version "0.10.9"
   resolved "https://registry.yarnpkg.com/framer/-/framer-0.10.9.tgz#6bdf801303ef801a4345d701a3f6098d59231a2c"

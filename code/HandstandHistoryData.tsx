@@ -1,16 +1,5 @@
-import * as React from "react";
-import "whatwg-fetch";
-import { Data } from "framer";
 import * as Airtable from "airtable";
-
 // const Airtable = require("airtable");
-
-let HandstandData = Data({
-  attemptsToday: [],
-  bestAttempt: 0,
-  dailyGoal: 0,
-  dailySum: 0
-});
 
 const base = new Airtable({ apiKey: "keycKv16qQ85dB1SD" }).base(
   "appyL0FkVEkJ0rSS3"
@@ -27,7 +16,6 @@ export const loadHandstandData = () =>
     })
     .all()
     .then(records => {
-      console.log("Records processing, # of records: ", records.length);
       const results = records.map(record => ({
         duration: record.fields.duration,
         date: record.fields.date,
@@ -49,7 +37,6 @@ export const loadBestAttemptEver = () =>
     })
     .all()
     .then(records => {
-      console.log("Records processing, # of records: ", records);
       return records[0].fields.BestAttempt;
     })
     .catch(err => {
@@ -63,7 +50,7 @@ export const updateHandstandTodayData = record => {
       goal: record.goal,
       SummaryLink: ["recWn5G5DYEQqAYRi"]
     },
-    function(err, record) {
+    function(err) {
       if (err) {
         console.error(err);
         return;
@@ -71,5 +58,3 @@ export const updateHandstandTodayData = record => {
     }
   );
 };
-
-export const HandstandTodayData = HandstandData;
