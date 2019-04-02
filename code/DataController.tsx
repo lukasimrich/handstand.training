@@ -1,3 +1,5 @@
+import * as NoSleep from "nosleep.js";
+
 import {
   updateHandstandTodayData,
   loadHandstandData,
@@ -5,6 +7,8 @@ import {
 } from "./HandstandHistoryData";
 import { sum } from "./Helpers";
 import Controller from "framer-controller";
+
+let noSleep = new NoSleep();
 
 /* 
 interface Attempt {
@@ -37,6 +41,16 @@ export class DataController extends Controller<State> {
       ...options
     });
     window.addEventListener("deviceorientation", this.handleOrientation, true);
+    document.addEventListener(
+      "click",
+      function enableNoSleep() {
+        console.log("No sleep enabled ", noSleep);
+        document.removeEventListener("click", enableNoSleep, false);
+        noSleep.enable();
+      },
+      false
+    );
+
     this.refresh();
   }
 
@@ -47,6 +61,7 @@ export class DataController extends Controller<State> {
     this.setState({ loading: true });
     const handstandsToday = await loadHandstandData();
     const bestAttemptEver = await loadBestAttemptEver();
+    console.log("best attempt ", bestAttemptEver);
 
     if (handstandsToday.length != 0) {
       this.setState({
@@ -71,7 +86,7 @@ export class DataController extends Controller<State> {
       let attemptTime = Math.abs(this.state.durationStart - Date.now());
       const newAttempt = {
         duration: attemptTime,
-        goal: 600000,
+        goal: 120000,
         date: Date.now(),
         key: Date.now()
       };

@@ -22,7 +22,7 @@ export const Arc: Override = () => {
     const progress =
       (dataController.timeTotal * 360) / dataController.dailyGoal;
     return {
-      length: progress
+      length: progress > 360 ? 360 : progress
     };
   }
 };
@@ -41,10 +41,13 @@ export const ProgressStats: Override = () => {
 };
 
 export const AllTimeBest: Override = () => {
+  console.log("best attempt in override ", dataController.bestAttempt);
   if (!dataController.isLoading) {
-    bestTime: `${convertMsToSecToString(
-      dataController.bestAttempt
-    )} all time best`;
+    return {
+      bestTime: `${convertMsToSecToString(
+        dataController.bestAttempt
+      )} all time best`
+    };
   }
 };
 

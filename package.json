@@ -14,9 +14,11 @@
 	},
 	"author": "Lukas Imrich",
 	"dependencies": {
+		"@framer/benjamin.animator": "^1.2.0",
 		"@framer/benjamin.arc": "^1.1.0",
 		"airtable": "^0.5.9",
 		"framer-controller": "^1.6.31",
+		"nosleep.js": "^0.9.0",
 		"whatwg-fetch": "^3.0.0"
 	}
 }
