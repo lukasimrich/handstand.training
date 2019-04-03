@@ -41,7 +41,6 @@ export const ProgressStats: Override = () => {
 };
 
 export const AllTimeBest: Override = () => {
-  console.log("best attempt in override ", dataController.bestAttempt);
   if (!dataController.isLoading) {
     return {
       bestTime: `${convertMsToSecToString(

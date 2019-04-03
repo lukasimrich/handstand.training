@@ -45,7 +45,6 @@ export class List_HandstandsToday extends React.Component<
           date.getMinutes()
         ),
         key: attempt.key
-        // width: this.props.width
       };
       result.push(React.createElement(activeComponent, propData));
     });

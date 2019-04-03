@@ -44,7 +44,6 @@ export class DataController extends Controller<State> {
     document.addEventListener(
       "click",
       function enableNoSleep() {
-        console.log("No sleep enabled ", noSleep);
         document.removeEventListener("click", enableNoSleep, false);
         noSleep.enable();
       },
@@ -61,7 +60,6 @@ export class DataController extends Controller<State> {
     this.setState({ loading: true });
     const handstandsToday = await loadHandstandData();
     const bestAttemptEver = await loadBestAttemptEver();
-    console.log("best attempt ", bestAttemptEver);
 
     if (handstandsToday.length != 0) {
       this.setState({
@@ -76,19 +74,21 @@ export class DataController extends Controller<State> {
 
   handleOrientation = event => {
     const { beta } = event;
+    const dateNow = Date.now();
     if (beta < -55 && beta > -125 && !this.state.isDown) {
       this.state.isDown = true;
-      this.state.durationStart = Date.now();
+      this.state.durationStart = dateNow;
     } else if ((beta < -125 || beta > -55) && this.state.isDown) {
       this.state.isDown = false;
 
       // TODO date now asssign (cache) to a variable and then
-      let attemptTime = Math.abs(this.state.durationStart - Date.now());
+
+      let attemptTime = Math.abs(this.state.durationStart - dateNow);
       const newAttempt = {
         duration: attemptTime,
         goal: 120000,
-        date: Date.now(),
-        key: Date.now()
+        date: dateNow,
+        key: dateNow
       };
       const { bestAttempt } = this.state;
       this.setState({

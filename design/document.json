@@ -441,9 +441,9 @@
                     "os" : "10_14",
                     "size" : {
                       "height" : 28,
-                      "width" : 154
+                      "width" : 150
                     },
-                    "width" : 153
+                    "width" : 149
                   },
                   "entityMap" : {
 
@@ -550,9 +550,9 @@
                     "os" : "10_14",
                     "size" : {
                       "height" : 16,
-                      "width" : 156
+                      "width" : 150
                     },
-                    "width" : 155
+                    "width" : 149
                   },
                   "entityMap" : {
 
@@ -12078,8 +12078,8 @@
                 "strokeWidth" : 0.5,
                 "visible" : true,
                 "width" : 245.80544324729638,
-                "x" : -5.8579443379391805e-16,
-                "y" : -2.7096380694757727e-15
+                "x" : -1.802269271322654e-15,
+                "y" : -3.41740524767431e-15
               }
             ],
             "exportOptions" : [
@@ -12145,7 +12145,7 @@
         "height" : 187,
         "heightType" : 0,
         "id" : "K11bZ5DMw",
-        "left" : 2250,
+        "left" : 748,
         "locked" : false,
         "name" : null,
         "navigationTarget" : null,
